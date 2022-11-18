@@ -1,15 +1,23 @@
 const authorModel = require('../models/authorModel.js')
-const emailValidator = require('email-validator')
 const jwt = require('jsonwebtoken')
+const validation = require('../validation/validation')
+
+
+
 
 const createAuthor = async function (req, res) {
     try {
         let data = req.body
-        if (!emailValidator.validate(data.email)) {
-            return res.status(404).send("invalid email")
-        }
+        console.log(data.password)
+        if(!validation.isValidEmail(data.email)) return res.status(400).send({status:false,msg:"invalid emailid"})
+        if(!validation.firstName(data.firstName)) return res.status(400).send({status:false,msg:"invalid firstname"})
+        if(!validation.lastName(data.lastName)) return res.status(400).send({status:false,msg:"invalid lastname"})
+         
+        const isValidPassword = (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,12}$/)
+        if (!isValidPassword.test(data.password)) return res.status(400).send({ status: false, message: "Invalid password" })
         let createData = await authorModel.create(data)
         res.status(201).send({ data: createData })
+
     }
     catch (error) {
         res.status(500).send({ message: error.message })

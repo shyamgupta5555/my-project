@@ -1,38 +1,48 @@
 const jwt = require('jsonwebtoken')
 const blogModels = require('../models/blogModels')
 
-const authentication = async function (req, res, next) {
-  try {
-    let token = req.headers['x-auth-token']
-    if (!token) return res.status(404).send({ msg: "this is  token requied" })
-    let decodeedToken = jwt.verify(token, "function up porject")
-    if (!decodeedToken) return res.status(404).send({ msg: "invalid token" })
-    console.log(decodeedToken)
-    req.data = decodeedToken.userId
-    next()
+const authentication = async function(req ,res ,next){
+try{
+  let token = req.headers['x-auth-token']
 
-  }
-  catch (error) {
-    res.status(500).send({ error: error.message, msg: "server error" })
-  }
+  if(!token)return res.status(404).send({msg : "this is  token requied"})
+  let decodeedToken = jwt.verify(token ,"function up porject")
+  console.log(decodeedToken)
+  if(!decodeedToken) return res.status(404).send({msg :"invalid token"})
+  req.data = decodeedToken.userId
+
+  next()
 }
-// =============== authorization
-const authorization = async function (req, res, next) {
-  try {
-    
-    let auth = req.data
-    let id = req.params.blogid
-    let blogData = await blogModels.findById({ _id: id })
-    if (blogData.authorId != auth) return res.status(404).send({ msg: "valid id is require" })
-    next()
-
-  }
-  catch (error) {
-    res.status(500).send({ error: error.message, msg: "server error" })
-  }
+catch (error) {
+  res.status(500).send({ error: error.message, msg: "server error" })
+}
 }
 
-module.exports.authentication = authentication
-module.exports.authorization = authorization
+
+const authorization = async function(req ,res ,next){
+  try{
+
+  let auth = req.data
+  let blogid = req.params.blogid
+  let authorid = req.body.authorId
+  if(blogid){
+   let blogData = await blogModels.findById(blogid)  
+  //  console.log(blogData.authorId== auth)
+   if( blogData.authorId != auth) return res.status(404).send({msg : "this is not match "})
+  }
+   
+  if(authorid!== auth){
+    return res.status(403).send({status :false , msg : "not authorized !!!"})
+  }
+   next()
+
+}
+catch (error) {
+  res.status(500).send({ error: error.message, msg: "server error" })
+}
+}
+
+module.exports.authentication= authentication
+module.exports.authorization =authorization
 
 

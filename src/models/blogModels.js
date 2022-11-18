@@ -16,8 +16,7 @@ authorId : {
    type : ObjectId,
    ref : 'Author',
    required : true,
-   trim : true
-},
+   trim : true },    
 tags : [String],
 category : {
     type :String,
