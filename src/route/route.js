@@ -9,32 +9,40 @@ router.get("/test-me", function(req, res){
     console.log("hi sweta")
     res.status(200).send({msg:"welcome"})
 })
+// ================== author ==============================//
 
-router.post('/authors', authorController.createAuthor)    //author create
+//  create author 
+router.post('/authors', authorController.createAuthor)    
+
+//  login api
+router.post('/login',authorController.login)
+
+// ================= blogs===========================//
+
+// bolgs create
+router.post('/blogs',middleware.authentication, blogController.createBlog) 
 
 
-////1
-router.post('/blog',middleware.authentication, blogController.createBlog) //blogs create
+// blogs  get
+router.get('/blogs',middleware.authentication, blogController.getblogData) 
 
-
-////2
-router.get('/blogData/:blogid',middleware.authentication, blogController.getblogData) // no id only use query param
-
-///3
+// blogs  update 
 router.put('/blogs/:blogid',middleware.authentication,middleware.authorization,blogController.update) // 
 
 
-///4
-
-router.put('/blog/:blogid', middleware.authentication,middleware.authorization,blogController.blogsDeleted) //blogsdelet
+// ==================== delet=======================//
 
 
+//  delet blogs one id 
+router.delete('/blog/:blogid', middleware.authentication,middleware.authorization,blogController.blogsDeleted) //blogsdelet
 
-//5
-router.put('/blogss',middleware.authentication , blogController.blogsdetails) // blogs details
 
 
-router.post('/login',authorController.login)
+//  delet blog  for query
+router.delete('/blogs',middleware.authentication , blogController.blogsdetails) 
+
+
+
 
 module.exports = router;
 

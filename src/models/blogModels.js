@@ -24,19 +24,21 @@ category : {
     trim : true
 },
 subcategory : [String],
-deletedAt: {
-    type:Date, 
-},
+
 isDeleted :{ 
     type : Boolean,
     default : false,
 },
-publishedAt:{
-    type:Date
+deletedAt: {
+    type:Date, 
 },
+
 isPublished : {
     type :Boolean,
     default : false
-}
+},
+publishedAt:{
+    type:Date
+},
 },{timestamps:true});
 module.exports = mongoose.model('Blog',blogSchema)
