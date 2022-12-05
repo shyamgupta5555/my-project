@@ -138,10 +138,10 @@ exports.updatebook = async (req, res) => {
                 return res.status(400).send({ status: false, message: "the formate of releasedAt should be like YYYY-MM-DD" });
         }
 
-        const findtitle = await booksModel.findOne({ title: title, isDeleted: false });
+        const findtitle = await booksModel.findOne({ title: title });
         if (findtitle) return res.status(409).send({ status: false, message: "titel is allready exsist" });
 
-        const ISBNfind = await booksModel.findOne({ ISBN: ISBN, isDeleted: false });
+        const ISBNfind = await booksModel.findOne({ ISBN: ISBN });
         if (ISBNfind) return res.status(409).send({ status: false, message: "ISBN is allready exsist" });
 
         const change = {
